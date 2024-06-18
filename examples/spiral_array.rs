@@ -3,14 +3,15 @@ use anyhow::{anyhow, Result};
 fn main() -> Result<()> {
     let sizes = [(9, 3, 3), (16, 4, 4), (25, 5, 5), (24, 4, 6), (18, 6, 3)];
 
-    for (len, rows, cols) in sizes {
-        let spiral = spiral_array(len, rows, cols)?;
+    for &(len, rows, cols) in &sizes {
+        let spiral = generate_spiral_array(len, rows, cols)?;
         print_spiral_array(&spiral);
     }
+
     Ok(())
 }
 
-fn spiral_array(len: u32, rows: u32, cols: u32) -> Result<Vec<Vec<u32>>> {
+fn generate_spiral_array(len: usize, rows: usize, cols: usize) -> Result<Vec<Vec<i32>>> {
     if len != rows * cols {
         return Err(anyhow!(
             "Array length {} must equal {} * {}",
@@ -20,104 +21,48 @@ fn spiral_array(len: u32, rows: u32, cols: u32) -> Result<Vec<Vec<u32>>> {
         ));
     }
 
-    let mut spiral_array = vec![vec![0; cols as usize]; rows as usize];
+    let mut array = vec![vec![0; cols]; rows];
+    let (mut top, mut bottom, mut left, mut right) = (0, rows - 1, 0, cols - 1);
+    let mut num = 1;
 
-    let mut limits = Limit {
-        right: cols - 1,
-        down: rows - 1,
-        left: 0,
-        up: 0,
-    };
+    while top <= bottom && left <= right {
+        for i in left..=right {
+            array[top][i] = num;
+            num += 1;
+        }
+        top += 1;
 
-    let mut direction = Direction::Right;
-    let mut point = Point { x: 0, y: 0 };
-    let mut i: u32 = 0;
+        for i in top..=bottom {
+            array[i][right] = num;
+            num += 1;
+        }
+        right -= 1;
 
-    while i < len {
-        spiral_array[point.x as usize][point.y as usize] = i + 1;
-        i += 1;
+        if top <= bottom {
+            for i in (left..=right).rev() {
+                array[bottom][i] = num;
+                num += 1;
+            }
+            bottom -= 1;
+        }
 
-        match direction {
-            Direction::Right => {
-                if point.y < limits.right {
-                    point.y += 1;
-                } else {
-                    limits.up += 1;
-                    direction = direction.next();
-                    point.x += 1;
-                }
+        if left <= right {
+            for i in (top..=bottom).rev() {
+                array[i][left] = num;
+                num += 1;
             }
-            Direction::Down => {
-                if point.x < limits.down {
-                    point.x += 1;
-                } else {
-                    limits.right -= 1;
-                    direction = direction.next();
-                    point.y -= 1;
-                }
-            }
-            Direction::Left => {
-                if point.y > limits.left {
-                    point.y -= 1;
-                } else {
-                    limits.down -= 1;
-                    direction = direction.next();
-                    point.x -= 1;
-                }
-            }
-            Direction::Up => {
-                if point.x > limits.up {
-                    point.x -= 1;
-                } else {
-                    limits.left += 1;
-                    direction = direction.next();
-                    point.y += 1;
-                }
-            }
+            left += 1;
         }
     }
 
-    Ok(spiral_array)
+    Ok(array)
 }
 
-#[derive(Debug, Clone, Copy)]
-struct Point {
-    x: u32,
-    y: u32,
-}
-
-#[derive(Debug)]
-struct Limit {
-    right: u32,
-    down: u32,
-    left: u32,
-    up: u32,
-}
-
-#[derive(Debug)]
-enum Direction {
-    Right,
-    Down,
-    Left,
-    Up,
-}
-
-impl Direction {
-    fn next(self) -> Self {
-        match self {
-            Direction::Right => Direction::Down,
-            Direction::Down => Direction::Left,
-            Direction::Left => Direction::Up,
-            Direction::Up => Direction::Right,
+fn print_spiral_array(array: &Vec<Vec<i32>>) {
+    for row in array {
+        for &val in row {
+            print!("{:4}", val);
         }
-    }
-}
-
-fn print_spiral_array(spiral_array: &Vec<Vec<u32>>) {
-    for row in spiral_array {
-        for col in row {
-            print!("{:5}", col);
-        }
-        println!()
+        println!();
     }
 }
