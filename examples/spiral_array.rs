@@ -1,40 +1,28 @@
 use anyhow::{anyhow, Result};
 
 fn main() -> Result<()> {
-    let spiral = spiral_array(9, 3, 3)?;
+    let sizes = [(9, 3, 3), (16, 4, 4), (25, 5, 5), (24, 4, 6), (18, 6, 3)];
 
-    print_spiral_array(spiral);
-
-    let spiral = spiral_array(16, 4, 4)?;
-
-    print_spiral_array(spiral);
-
-    let spiral = spiral_array(25, 5, 5)?;
-
-    print_spiral_array(spiral);
-
-    let spiral = spiral_array(24, 4, 6)?;
-
-    print_spiral_array(spiral);
+    for (len, rows, cols) in sizes {
+        let spiral = spiral_array(len, rows, cols)?;
+        print_spiral_array(&spiral);
+    }
     Ok(())
 }
 
-fn spiral_array(len: usize, rows: usize, cols: usize) -> Result<Vec<Vec<i32>>> {
-    if len != (rows * cols) {
-        return Err(anyhow!("array {} must equals {} * {}", len, rows, cols));
+fn spiral_array(len: u32, rows: u32, cols: u32) -> Result<Vec<Vec<u32>>> {
+    if len != rows * cols {
+        return Err(anyhow!(
+            "Array length {} must equal {} * {}",
+            len,
+            rows,
+            cols
+        ));
     }
 
-    let mut spiral_array: Vec<Vec<i32>> = Vec::new();
+    let mut spiral_array = vec![vec![0; cols as usize]; rows as usize];
 
-    for _ in 0..rows {
-        let mut col = Vec::new();
-        for _ in 0..cols {
-            col.push(0);
-        }
-        spiral_array.push(col);
-    }
-
-    let mut limit = Limit {
+    let mut limits = Limit {
         right: cols - 1,
         down: rows - 1,
         left: 0,
@@ -43,102 +31,50 @@ fn spiral_array(len: usize, rows: usize, cols: usize) -> Result<Vec<Vec<i32>>> {
 
     let mut direction = Direction::Right;
     let mut point = Point { x: 0, y: 0 };
+    let mut i: u32 = 0;
 
-    let mut i = 0;
     while i < len {
-        let p = match direction {
+        spiral_array[point.x as usize][point.y as usize] = i + 1;
+        i += 1;
+
+        match direction {
             Direction::Right => {
-                if point.y <= (limit.right as isize) {
-                    spiral_array[point.x as usize][point.y as usize] = (i + 1) as i32;
+                if point.y < limits.right {
                     point.y += 1;
-                    Some(point)
                 } else {
-                    limit.up += 1;
-
-                    point.x = limit.up as isize;
-
-                    point.y = limit.right as isize;
-
+                    limits.up += 1;
                     direction = direction.next();
-
-                    println!(
-                        "point:{:?}, direction:{:?}, limit:{:?}",
-                        &point, &direction, &limit
-                    );
-                    None
+                    point.x += 1;
                 }
             }
             Direction::Down => {
-                if point.x <= (limit.down as isize) {
-                    spiral_array[point.x as usize][point.y as usize] = (i + 1) as i32;
+                if point.x < limits.down {
                     point.x += 1;
-                    Some(point)
                 } else {
-                    limit.right -= 1;
-
-                    point.x = limit.down as isize;
-
-                    point.y = limit.right as isize;
-
+                    limits.right -= 1;
                     direction = direction.next();
-
-                    println!(
-                        "point:{:?}, direction:{:?}, limit:{:?}",
-                        &point, &direction, &limit
-                    );
-                    None
+                    point.y -= 1;
                 }
             }
             Direction::Left => {
-                if point.y >= (limit.left as isize) {
-                    spiral_array[point.x as usize][point.y as usize] = (i + 1) as i32;
+                if point.y > limits.left {
                     point.y -= 1;
-                    Some(point)
                 } else {
-                    limit.down -= 1;
-
-                    point.x = limit.down as isize;
-
-                    point.y = limit.left as isize;
-
+                    limits.down -= 1;
                     direction = direction.next();
-
-                    println!(
-                        "point:{:?}, direction:{:?}, limit:{:?}",
-                        &point, &direction, &limit
-                    );
-                    None
+                    point.x -= 1;
                 }
             }
             Direction::Up => {
-                if point.x >= (limit.up as isize) {
-                    spiral_array[point.x as usize][point.y as usize] = (i + 1) as i32;
+                if point.x > limits.up {
                     point.x -= 1;
-                    Some(point)
                 } else {
-                    limit.left += 1;
-
-                    point.x = limit.up as isize;
-
-                    point.y = limit.left as isize;
-
+                    limits.left += 1;
                     direction = direction.next();
-
-                    println!(
-                        "point:{:?}, direction:{:?}, limit:{:?}",
-                        &point, &direction, &limit
-                    );
-                    None
+                    point.y += 1;
                 }
             }
-        };
-
-        match p {
-            None => {}
-            Some(_) => {
-                i += 1;
-            }
-        };
+        }
     }
 
     Ok(spiral_array)
@@ -146,16 +82,16 @@ fn spiral_array(len: usize, rows: usize, cols: usize) -> Result<Vec<Vec<i32>>> {
 
 #[derive(Debug, Clone, Copy)]
 struct Point {
-    x: isize,
-    y: isize,
+    x: u32,
+    y: u32,
 }
 
 #[derive(Debug)]
 struct Limit {
-    right: usize,
-    down: usize,
-    left: usize,
-    up: usize,
+    right: u32,
+    down: u32,
+    left: u32,
+    up: u32,
 }
 
 #[derive(Debug)]
@@ -177,7 +113,7 @@ impl Direction {
     }
 }
 
-fn print_spiral_array(spiral_array: Vec<Vec<i32>>) {
+fn print_spiral_array(spiral_array: &Vec<Vec<u32>>) {
     for row in spiral_array {
         for col in row {
             print!("{:5}", col);
