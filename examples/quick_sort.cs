@@ -2,8 +2,10 @@ int[] arr = { 34, 7, 23, 32, 5, 62, 1, 31, 32, 5 };
 Console.WriteLine("{0,-18} {1}", "Original array: ", String.Join(", ", arr));
 
 var segment = new ArraySegment<int>(arr);
-
+var start = Stopwatch.StartNew();
 QuickSort(segment);
+var duration = start.Elapsed;
+Console.WriteLine("Time taken: " + duration);
 
 Console.WriteLine("{0,-18} {1}", "Sorted array: ", String.Join(", ", arr));
 
@@ -12,6 +14,7 @@ void QuickSort<T>(ArraySegment<T> segment) where T : IComparable<T>
     if (segment.Count > 1)
     {
         var pivotIndex = Partition(segment);
+        // 跳过已经排序好的索引
         var left = segment[0..pivotIndex];
         var right = segment[(pivotIndex + 1)..];
 

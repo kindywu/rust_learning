@@ -11,11 +11,13 @@ public class QuickSortExample
         // Console.WriteLine("arr: " + String.Join(", ", arr));
 
         Console.WriteLine("Original array: " + String.Join(", ", arr));
+
         var start = Stopwatch.StartNew();
         QuickSort(arr, 0, arr.Length - 1);
         var duration = start.Elapsed;
-        Console.WriteLine("Sorted array: " + String.Join(", ", arr));
         Console.WriteLine("Time taken: " + duration);
+
+        Console.WriteLine("Sorted array: " + String.Join(", ", arr));
     }
 
     // static void clear(ArraySegment<int> segment, int deep)
