@@ -1,13 +1,13 @@
 // cargo expand --example demo
 #[tokio::main]
 async fn main() {
-    let mut data = vec![1, 2, 3];
+    let mut arr = [34, 7, 23, 32, 5, 18, 1, 31, 32, 5];
+    println!("Original array: {:?}", arr);
 
-    let last = data.last();
+    let pivot_index = arr.len() / 2;
 
-    // data.push(4);
-
-    println!("last:{last:?}");
-
-    data.push(4);
+    let (left, right) = arr.split_at_mut(pivot_index);
+    println!("{pivot_index}");
+    println!("Left array: {:?}", left);
+    println!("Right array: {:?}", &mut right[1..]);
 }
