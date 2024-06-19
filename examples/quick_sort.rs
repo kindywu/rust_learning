@@ -2,12 +2,16 @@ use std::{fmt::Debug, time::Instant};
 
 fn main() {
     let mut arr = [34, 7, 23, 32, 5, 62, 1, 31, 32, 5];
-    println!("Original array: {:?}", arr);
+    // let mut arr = [2, 3, 4, 1];
+
+    println!("{:20} {:?}", "Original array: ", arr);
+
     let start = Instant::now();
     quicksort(&mut arr);
     let duration = start.elapsed();
-    println!("Sorted array: {:?}", arr);
     println!("Time taken: {:?}", duration);
+
+    println!("{:20} {:?}", "Sorted array: ", arr);
 }
 
 fn quicksort<T: Ord + Debug>(arr: &mut [T]) {
