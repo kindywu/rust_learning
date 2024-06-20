@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Result};
 
 fn main() -> Result<()> {
-    let sizes = [(9, 3, 3), (16, 4, 4), (25, 5, 5), (24, 4, 6), (18, 6, 3)];
+    let sizes = [(9, 3, 3), (100, 10, 10), (25, 5, 5), (24, 4, 6), (18, 6, 3)];
 
     for &(len, rows, cols) in &sizes {
         let spiral = generate_spiral_array(len, rows, cols)?;
