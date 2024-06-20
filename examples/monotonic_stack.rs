@@ -26,26 +26,16 @@ fn compare_bigger(x: i32, y: i32) -> bool {
     x < y
 }
 
-#[allow(dead_code)]
 fn compare_smaller(x: i32, y: i32) -> bool {
     x > y
 }
 
 fn main() {
-    // 当天的股票曲线，可能的最高收入是多少？
-    let nums = vec![30, 50, 90, 60, 125, 110];
-    println!("{:20}: {:?}", "elements", nums);
+    let nums = vec![2, 1, 2, 4, 3];
     let next_greater = monotonic_stack(&nums, compare_bigger);
-    println!("{:20}: {:?}", "next elements", next_greater);
-
-    let difference: Vec<i32> = next_greater
-        .iter()
-        .zip(nums.iter())
-        .map(|(a, b)| a - b)
-        .collect();
-    println!("{:20}: {:?}", "difference elements", difference);
-    println!("{:20}: {:?}", "max value", difference.iter().max().unwrap());
-
-    // let next_smaller = monotonic_stack(&nums, compare_smaller);
-    // println!("Next smaller elements: {:?}", next_smaller);
+    println!("Next greater elements: {:?}", next_greater);
+    assert_eq!(next_greater, vec![4, 2, 4, -1, -1]);
+    let next_smaller = monotonic_stack(&nums, compare_smaller);
+    println!("Next smaller elements: {:?}", next_smaller);
+    assert_eq!(next_smaller, vec![1, -1, -1, 3, -1]);
 }
