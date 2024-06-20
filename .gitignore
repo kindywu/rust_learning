@@ -1,3 +1,4 @@
 /target
 /dotnet/bin
 /dotnet/obj
+/dotnet/.vs

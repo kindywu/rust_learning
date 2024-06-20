@@ -5,6 +5,12 @@ public class QuickSortExample
 {
     public static void Main()
     {
+
+        foreach (var num in Enumerable.Range(3, 10-3+1))
+        {
+            Console.WriteLine(num);
+        }
+
         var arr = new int[] { 34, 7, 23, 32, 5, 62, 1, 31, 32, 5 };
         // var arr = new int[] { 2, 3, 4, 1 };
         // var arr = new int[] { 2, 2, 3, 3, 4, 4, 1, 1, 0, 0 };
