@@ -5,10 +5,9 @@ public class QuickSortExample
 {
     public static void Main()
     {
-        int[] arr = { 34, 7, 23, 32, 5, 62, 1, 31, 32, 5 };
-        // var segment = new ArraySegment<int>(arr);
-        // clear(segment, arr.Length - 1);
-        // Console.WriteLine("arr: " + String.Join(", ", arr));
+        var arr = new int[] { 34, 7, 23, 32, 5, 62, 1, 31, 32, 5 };
+        // var arr = new int[] { 2, 3, 4, 1 };
+        // var arr = new int[] { 2, 2, 3, 3, 4, 4, 1, 1, 0, 0 };
 
         Console.WriteLine("Original array: " + String.Join(", ", arr));
 
@@ -19,18 +18,6 @@ public class QuickSortExample
 
         Console.WriteLine("Sorted array: " + String.Join(", ", arr));
     }
-
-    // static void clear(ArraySegment<int> segment, int deep)
-    // {
-    //     if (deep >= 0)
-    //     {
-    //         segment[deep] = 0;
-    //         segment = segment[0..deep];
-    //         // list = list.GetRange(0, deep);
-    //         // clear(list, deep - 1);
-    //         clear(segment, deep - 1);
-    //     }
-    // }
 
     public static void QuickSort<T>(T[] arr, int low, int high) where T : IComparable<T>
     {
@@ -45,17 +32,17 @@ public class QuickSortExample
     public static int Partition<T>(T[] arr, int low, int high) where T : IComparable<T>
     {
         T pivot = arr[high];
-        int i = low - 1;
+        int i = low;
         for (int j = low; j < high; j++)
         {
             if (arr[j].CompareTo(pivot) < 0)
             {
-                i++;
                 Swap(ref arr[i], ref arr[j]);
+                i++;
             }
         }
-        Swap(ref arr[i + 1], ref arr[high]);
-        return i + 1;
+        Swap(ref arr[i], ref arr[high]);
+        return i;
     }
 
     private static void Swap<T>(ref T a, ref T b)

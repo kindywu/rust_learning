@@ -4,6 +4,7 @@ use std::{fmt::Debug, time::Instant};
 fn main() -> Result<()> {
     let mut arr = [34, 7, 23, 32, 5, 62, 1, 31, 32, 5];
     // let mut arr = [2, 3, 4, 1];
+    // let mut arr = [2, 2, 3, 3, 4, 4, 1, 1, 0, 0];
 
     let high = arr.len() - 1;
 
